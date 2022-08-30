@@ -1,9 +1,17 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { prisma } from '../client/db';
+import { trpc } from '../utils/trpc';
 
-const Home: NextPage = (props: any) => {
-  const tasks = JSON.parse(props.tasks);
+const Home: NextPage = () => {
+  const client = trpc.useContext();
+  const tasks = trpc.useQuery(['task.get-all']);
+  const setIsDone = trpc.useMutation(['task.set-isDone'], {
+    onSuccess: () => client.invalidateQueries('task.get-all'),
+  });
+
+  if (tasks.isLoading || !tasks.data) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className='h-screen flex flex-col justify-center items-center bg-slate-800'>
@@ -13,14 +21,13 @@ const Home: NextPage = (props: any) => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main>
-        <h1 className='p-4 text-6xl font-extrabold text-slate-200'>Welcome to fior-t3-todo</h1>
-      </main>
+      <h1 className='p-4 text-6xl font-extrabold text-slate-200'>Welcome to fior-t3-todo</h1>
       <div>
-        {tasks &&
-          tasks.map((task: any) => (
+        {tasks.data
+          .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
+          .map((task: any) => (
             <div key={task.id} className='text-2xl flex items-center'>
-              <input id={task.id} type='checkbox' checked={task.isDone} className='m-3' />
+              <input id={task.id} type='checkbox' checked={task.isDone} className='m-3' onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })} />
               <label htmlFor={task.id}>{task.name}</label>
             </div>
           ))}
@@ -30,13 +37,3 @@ const Home: NextPage = (props: any) => {
 };
 
 export default Home;
-
-export const getServerSideProps = async () => {
-  const tasks = await prisma.task.findMany();
-
-  return {
-    props: {
-      tasks: JSON.stringify(tasks),
-    },
-  };
-};
