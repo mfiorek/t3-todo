@@ -1,13 +1,11 @@
+import { task } from '@prisma/client';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Task from '../components/Task';
 import { trpc } from '../utils/trpc';
 
 const Home: NextPage = () => {
-  const client = trpc.useContext();
   const tasks = trpc.useQuery(['task.get-all']);
-  const setIsDone = trpc.useMutation(['task.set-isDone'], {
-    onSuccess: () => client.invalidateQueries('task.get-all'),
-  });
 
   if (tasks.isLoading || !tasks.data) {
     return <div>Loading...</div>;
@@ -25,11 +23,8 @@ const Home: NextPage = () => {
       <div>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
-          .map((task: any) => (
-            <div key={task.id} className='text-2xl flex items-center'>
-              <input id={task.id} type='checkbox' checked={task.isDone} className='m-3' onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })} />
-              <label htmlFor={task.id}>{task.name}</label>
-            </div>
+          .map((task: task) => (
+            <Task key={task.id} id={task.id} createdAt={task.createdAt} name={task.name} isDone={task.isDone} />
           ))}
       </div>
     </div>
