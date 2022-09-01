@@ -27,9 +27,9 @@ const Task: React.FC<task> = (task) => {
       }
     },
     // Always refetch after error or success:
-    onSettled: () => {
-      client.invalidateQueries(['task.get-all']);
-    },
+    // onSettled: () => {
+    //   client.invalidateQueries(['task.get-all']);
+    // },
   });
   const classes = classNames('text-2xl flex items-center', { 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500': task.isDone })
 
