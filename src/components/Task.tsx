@@ -31,11 +31,11 @@ const Task: React.FC<task> = (task) => {
     //   client.invalidateQueries(['task.get-all']);
     // },
   });
-  const classes = classNames('text-2xl flex items-center', { 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500': task.isDone })
+  const classes = classNames('text-3xl flex items-baseline mb-2', { 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500': task.isDone });
 
   return (
     <div className={classes}>
-      <input id={task.id} type='checkbox' checked={task.isDone} className='m-3 ' onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })} />
+      <input id={task.id} type='checkbox' checked={task.isDone} className='m-3' onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })} />
       <label htmlFor={task.id}>{task.name}</label>
     </div>
   );

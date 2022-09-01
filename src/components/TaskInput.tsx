@@ -41,13 +41,13 @@ const TaskInput = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={(e) => handleSubmit(e)} className='relative text-2xl'>
+    <div className='w-full px-8'>
+      <form onSubmit={(e) => handleSubmit(e)} className='relative text-3xl'>
         <input
           type='text'
           ref={inputRef}
           placeholder='Add a task'
-          className='rounded-full border border-slate-600 bg-transparent py-2 pl-4 pr-20 focus:border-slate-400 focus-visible:outline-none'
+          className='rounded-full w-full border border-slate-600 bg-transparent py-2 pl-4 pr-20 focus:border-slate-400 focus-visible:outline-none'
         />
         <div className='absolute right-0 top-0 flex h-full justify-end p-1'>
           <button type='submit' className='flex h-full items-center justify-center rounded-full bg-slate-600 px-4'>
