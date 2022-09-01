@@ -14,6 +14,7 @@
     "@trpc/next": "^9.27.2",
     "@trpc/react": "^9.27.2",
     "@trpc/server": "^9.27.2",
+    "classnames": "^2.3.1",
     "cuid": "^2.1.8",
     "next": "12.2.5",
     "react": "18.2.0",

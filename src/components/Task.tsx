@@ -1,6 +1,7 @@
 import React from 'react';
 import { task } from '@prisma/client';
 import { trpc } from '../utils/trpc';
+import classNames from 'classnames';
 
 const Task: React.FC<task> = (task) => {
   const client = trpc.useContext();
@@ -30,10 +31,11 @@ const Task: React.FC<task> = (task) => {
       client.invalidateQueries(['task.get-all']);
     },
   });
+  const classes = classNames('text-2xl flex items-center', { 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500': task.isDone })
 
   return (
-    <div className='text-2xl flex items-center'>
-      <input id={task.id} type='checkbox' checked={task.isDone} className='m-3' onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })} />
+    <div className={classes}>
+      <input id={task.id} type='checkbox' checked={task.isDone} className='m-3 ' onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })} />
       <label htmlFor={task.id}>{task.name}</label>
     </div>
   );
