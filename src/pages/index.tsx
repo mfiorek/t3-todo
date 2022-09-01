@@ -2,6 +2,7 @@ import { task } from '@prisma/client';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Task from '../components/Task';
+import TaskInput from '../components/TaskInput';
 import { trpc } from '../utils/trpc';
 
 const Home: NextPage = () => {
@@ -20,6 +21,7 @@ const Home: NextPage = () => {
       </Head>
 
       <h1 className='p-4 text-6xl font-extrabold text-slate-200'>Welcome to fior-t3-todo</h1>
+      <TaskInput />
       <div>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
