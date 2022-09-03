@@ -7,12 +7,17 @@ export const taskRouter = trpc
   // CREATE
   .mutation('create', {
     input: z.object({
+      id: z.string(),
       name: z.string(),
+      createdAt: z.date()
     }),
     resolve: async ({ input }) => {
+      const { id, name, createdAt } = input;
       return await prisma.task.create({
         data: {
-          name: input.name,
+          id,
+          name,
+          createdAt
         },
       });
     },
@@ -40,7 +45,7 @@ export const taskRouter = trpc
     },
   })
 
-  // Delete
+  // DELETE
   .mutation('delete', {
     input: z.object({
       id: z.string(),

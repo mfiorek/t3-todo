@@ -6,7 +6,7 @@ const TaskInput = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const client = trpc.useContext();
   const createMutation = trpc.useMutation(['task.create'], {
-    onMutate: async ({ name }) => {
+    onMutate: async ({ id, name, createdAt }) => {
       // Clear input text:
       if (inputRef.current) {
         inputRef.current.value = '';
@@ -17,7 +17,7 @@ const TaskInput = () => {
       const previousTasks = client.getQueryData(['task.get-all']);
       // Optimistically update to the new value:
       if (previousTasks) {
-        client.setQueryData(['task.get-all'], [...previousTasks, { id: `tempId_${cuid()}`, createdAt: new Date(), isDone: false, name: name }]);
+        client.setQueryData(['task.get-all'], [...previousTasks, { id: id, createdAt: createdAt, isDone: false, name: name }]);
       }
       return { previousTasks };
     },
@@ -27,16 +27,12 @@ const TaskInput = () => {
         client.setQueryData(['task.get-all'], context.previousTasks);
       }
     },
-    // Always refetch after error or success:
-    onSettled: () => {
-      client.invalidateQueries(['task.get-all']);
-    },
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputRef.current && inputRef.current.value) {
-      createMutation.mutate({ name: inputRef.current.value });
+      createMutation.mutate({ id: cuid(), name: inputRef.current.value, createdAt: new Date() });
     }
   };
 

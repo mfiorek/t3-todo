@@ -26,10 +26,6 @@ const Task: React.FC<task> = (task) => {
         client.setQueryData(['task.get-all'], context.previousTasks);
       }
     },
-    // Always refetch after error or success:
-    // onSettled: () => {
-    //   client.invalidateQueries(['task.get-all']);
-    // },
   });
   const deleteTask = trpc.useMutation(['task.delete'], {
     onMutate: async ({ id }) => {
