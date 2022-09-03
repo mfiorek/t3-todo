@@ -52,7 +52,7 @@ const TaskInput = () => {
         <div className='absolute right-0 top-0 flex h-full justify-end p-1'>
           <button
             type='submit'
-            // disabled={!inputRef.current?.value}
+            disabled={!inputRef.current?.value}
             className='flex h-full items-center justify-center rounded-sm bg-slate-600 px-4 disabled:cursor-not-allowed disabled:opacity-25'
           >
             Add
