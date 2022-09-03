@@ -1,12 +1,20 @@
 import '../styles/globals.css';
-import type { AppProps } from 'next/app';
 import { withTRPC } from '@trpc/next';
 import type { AppRouter } from '../server/router';
 import superjson from 'superjson';
+import { SessionProvider } from "next-auth/react";
+import { AppType } from 'next/dist/shared/lib/utils';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
-}
+const MyApp: AppType = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
+};
 
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') return '';

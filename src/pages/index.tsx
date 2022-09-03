@@ -5,13 +5,21 @@ import Task from '../components/Task';
 import TaskInput from '../components/TaskInput';
 import { trpc } from '../utils/trpc';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { useSession, signIn } from "next-auth/react"
+
 
 const Home: NextPage = () => {
   const [parentDivRef] = useAutoAnimate<HTMLDivElement>();
   const tasks = trpc.useQuery(['task.get-all']);
+  const { status } = useSession({
+    required: true,
+  })
+  if (status !== "authenticated") {
+    return <div>Loading or not authenticated...</div>
+  }
 
   if (tasks.isLoading || !tasks.data) {
-    return <div>Loading...</div>;
+    return <div>Loading data...</div>;
   }
 
   return (

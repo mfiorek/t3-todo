@@ -1,12 +1,10 @@
-import * as trpc from '@trpc/server';
+import { createRouter } from "./context";
 import superjson from 'superjson';
 import { taskRouter } from "./taskRouter";
 
-export const appRouter = trpc
-    .router()
+export const appRouter = createRouter()
     .transformer(superjson)
-    .merge('task.', taskRouter)
-    ;
+    .merge('task.', taskRouter);
   
 // export type definition of API
 export type AppRouter = typeof appRouter;

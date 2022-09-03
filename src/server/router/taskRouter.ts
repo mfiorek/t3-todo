@@ -1,9 +1,7 @@
-import * as trpc from '@trpc/server';
-import { prisma } from '../prisma';
 import { z } from 'zod';
+import { createProtectedRouter } from "./protected-router";
 
-export const taskRouter = trpc
-  .router()
+export const taskRouter = createProtectedRouter()
   // CREATE
   .mutation('create', {
     input: z.object({
@@ -11,9 +9,9 @@ export const taskRouter = trpc
       name: z.string(),
       createdAt: z.date()
     }),
-    resolve: async ({ input }) => {
+    resolve: async ({ ctx, input }) => {
       const { id, name, createdAt } = input;
-      return await prisma.task.create({
+      return await ctx.prisma.task.create({
         data: {
           id,
           name,
@@ -25,8 +23,8 @@ export const taskRouter = trpc
 
   // READ
   .query('get-all', {
-    resolve: async () => {
-      return await prisma.task.findMany();
+    resolve: async ({ ctx }) => {
+      return await ctx.prisma.task.findMany();
     },
   })
 
@@ -36,9 +34,9 @@ export const taskRouter = trpc
       id: z.string(),
       isDone: z.boolean(),
     }),
-    resolve: async ({ input }) => {
+    resolve: async ({ ctx, input }) => {
       const { id, isDone } = input;
-      return await prisma.task.update({
+      return await ctx.prisma.task.update({
         where: { id },
         data: { isDone },
       });
@@ -50,9 +48,9 @@ export const taskRouter = trpc
     input: z.object({
       id: z.string(),
     }),
-    resolve: async ({ input }) => {
+    resolve: async ({ ctx, input }) => {
       const { id } = input;
-      return await prisma.task.delete({
+      return await ctx.prisma.task.delete({
         where: { id },
       });
     },
