@@ -41,16 +41,20 @@ const TaskInput = () => {
   };
 
   return (
-    <div className='w-full px-8'>
-      <form onSubmit={(e) => handleSubmit(e)} className='relative text-3xl'>
+    <div className='w-full px-6 py-2 sticky top-0 bg-slate-800 z-10'>
+      <form onSubmit={(e) => handleSubmit(e)} className='relative text-xl'>
         <input
           type='text'
           ref={inputRef}
           placeholder='Add a task'
-          className='rounded-full w-full border border-slate-600 bg-transparent py-2 pl-4 pr-20 focus:border-slate-400 focus-visible:outline-none'
+          className='w-full rounded border border-slate-600 bg-transparent py-2 pl-4 pr-20 focus:border-slate-400 focus-visible:outline-none'
         />
         <div className='absolute right-0 top-0 flex h-full justify-end p-1'>
-          <button type='submit' className='flex h-full items-center justify-center rounded-full bg-slate-600 px-4'>
+          <button
+            type='submit'
+            // disabled={!inputRef.current?.value}
+            className='flex h-full items-center justify-center rounded-sm bg-slate-600 px-4 disabled:cursor-not-allowed disabled:opacity-25'
+          >
             Add
           </button>
         </div>

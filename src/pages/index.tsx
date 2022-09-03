@@ -28,9 +28,9 @@ const Home: NextPage = () => {
         <meta name='theme-color' content='#1e293b' />
       </Head>
 
-      <h1 className='w-full p-4 text-center text-6xl font-extrabold text-slate-200'>fior-t3-todo</h1>
+      <h1 className='w-full p-4 text-center text-4xl font-extrabold text-slate-200'>fior-t3-todo</h1>
       <TaskInput />
-      <div ref={parentDivRef} className='w-full p-8'>
+      <div ref={parentDivRef} className='w-full p-6 flex flex-col gap-2'>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
           .map((task: task) => (

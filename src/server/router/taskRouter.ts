@@ -38,4 +38,17 @@ export const taskRouter = trpc
         data: { isDone },
       });
     },
+  })
+
+  // Delete
+  .mutation('delete', {
+    input: z.object({
+      id: z.string(),
+    }),
+    resolve: async ({ input }) => {
+      const { id } = input;
+      return await prisma.task.delete({
+        where: { id },
+      });
+    },
   });
