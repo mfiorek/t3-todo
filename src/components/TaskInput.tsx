@@ -35,7 +35,7 @@ const TaskInput = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (inputRef.current) {
+    if (inputRef.current && inputRef.current.value) {
       createMutation.mutate({ name: inputRef.current.value });
     }
   };
