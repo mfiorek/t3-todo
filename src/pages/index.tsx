@@ -5,20 +5,33 @@ import Task from '../components/Task';
 import TaskInput from '../components/TaskInput';
 import { trpc } from '../utils/trpc';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { useSession, signIn } from "next-auth/react"
-
+import { useSession, signIn } from 'next-auth/react';
+import Image from 'next/image';
 
 const Home: NextPage = () => {
   const [parentDivRef] = useAutoAnimate<HTMLDivElement>();
   const tasks = trpc.useQuery(['task.get-all']);
-  const { status } = useSession({
-    required: true,
-  })
-  if (status !== "authenticated") {
-    return <div>Loading or not authenticated...</div>
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') {
+    // TODO loader animation
+    return <div className='flex h-screen w-full items-center justify-center bg-slate-800 text-4xl'>Loading...</div>;
+  }
+  if (!session) {
+    return (
+      <div className='flex h-screen w-full flex-col items-center justify-center bg-slate-800'>
+        <Image src='/logo.svg' alt='logo' className='' width={180} height={180} />
+        <h1 className='text-4xl font-extrabold'>Welcome to fior-t3-todo</h1>
+        <p className='m-4 text-2xl'>Please log in:</p>
+        <button onClick={() => signIn('github')} className='rounded-lg bg-slate-600 p-4 text-2xl'>
+          Log in with GitHub!
+        </button>
+      </div>
+    );
   }
 
   if (tasks.isLoading || !tasks.data) {
+    // TODO loader animation
     return <div>Loading data...</div>;
   }
 
@@ -37,8 +50,9 @@ const Home: NextPage = () => {
       </Head>
 
       <h1 className='w-full p-4 text-center text-4xl font-extrabold text-slate-200'>fior-t3-todo</h1>
+      <h3 className='w-full text-center text-2xl'>Hi {session.user?.name}!</h3>
       <TaskInput />
-      <div ref={parentDivRef} className='w-full p-6 flex flex-col gap-2'>
+      <div ref={parentDivRef} className='flex w-full flex-col gap-2 p-6'>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
           .map((task: task) => (
