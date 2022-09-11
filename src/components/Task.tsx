@@ -57,21 +57,21 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
   const classes = classNames({ 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500': task.isDone });
 
   return (
-    <label htmlFor={task.id} className={`${classes} flex items-start justify-between rounded bg-slate-700 text-xl`}>
+    <label htmlFor={task.id} className={`${classes} flex items-start justify-between rounded bg-slate-700`}>
       <div className='flex items-baseline'>
         <input
           id={task.id}
           type='checkbox'
           checked={task.isDone}
           onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })}
-          className='checked:before:checkmark float-left m-3 grid aspect-square h-6 w-6 cursor-pointer appearance-none place-content-center rounded border border-gray-300 bg-white bg-contain bg-center bg-no-repeat transition duration-200
-          before:grid before:h-4 before:w-4 before:origin-center before:scale-0 
+          className='checked:before:checkmark float-left m-3 grid aspect-square h-4 w-4 cursor-pointer appearance-none place-content-center rounded border border-gray-300 bg-white bg-contain bg-center bg-no-repeat transition duration-200
+          before:grid before:h-3 before:w-3 before:origin-center before:scale-0 
           checked:border-lime-600 checked:bg-lime-800 checked:before:scale-100 checked:before:bg-lime-600'
         />
         {task.name}
       </div>
-      <button className='m-3 flex aspect-square h-6 w-6 items-center justify-center rounded bg-red-500' onClick={() => deleteTask.mutate({ id: task.id })}>
-        <span className='xmark h-4 w-4 bg-red-200'></span>
+      <button className='m-3 flex aspect-square h-4 w-4 items-center justify-center rounded bg-red-500' onClick={() => deleteTask.mutate({ id: task.id })}>
+        <span className='xmark h-3 w-3 bg-red-200'></span>
       </button>
     </label>
   );

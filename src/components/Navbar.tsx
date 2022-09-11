@@ -11,11 +11,16 @@ const Navbar: React.FC = () => {
 
   return (
     <div className='flex items-center justify-between bg-slate-700 px-6 py-2'>
-      <h1 className='text-center text-2xl font-extrabold text-slate-200'>fior-t3-todo</h1>
+      <div className='flex items-center gap-2'>
+        <div className='relative h-8 w-8'>
+          <Image src='/logo.svg' alt='logo' layout='fill' />
+        </div>
+        <h1 className='text-center text-xl font-extrabold text-slate-200'>fior-t3-todo</h1>
+      </div>
       {session?.user && (
         <div className='relative' tabIndex={0} onFocus={() => setMenuOpen(true)} onBlur={() => setMenuOpen(false)}>
           {session.user.image && (
-            <div className='relative h-14 w-14'>
+            <div className='relative h-10 w-10'>
               <Image src={session.user.image} alt='user pic' layout='fill' className='rounded-full' />
             </div>
           )}
@@ -23,7 +28,7 @@ const Navbar: React.FC = () => {
             className={`absolute top-full right-0 z-20 mt-1 flex origin-top-right transform flex-col gap-2 rounded bg-slate-600 p-2 transition duration-200 ease-in-out ${menuClass}`}
           >
             <div>
-              <h3 className='text-md'>{session.user.name}</h3>
+              <h3>{session.user.name}</h3>
               <h4 className='text-sm'>{session.user.email}</h4>
             </div>
             <hr className='border-slate-500' />
