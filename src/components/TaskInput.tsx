@@ -39,7 +39,7 @@ const TaskInput = () => {
   };
 
   return (
-    <div className='sticky top-0 z-10 w-full bg-slate-800 px-6 py-4'>
+    <div className='bg-slate-800 px-6 py-4'>
       <form onSubmit={(e) => handleSubmit(e)} className='relative text-xl'>
         <input
           type='text'

@@ -44,14 +44,19 @@ const TaskPage: React.FC = () => {
   }
   return (
     <>
-      <Navbar />
-      <TaskInput />
-      <div ref={parentDivRef} className='flex w-full flex-col gap-2 px-6 py-2'>
+      <div className='sticky top-0 z-50 w-full'>
+        <Navbar />
+        <TaskInput />
+      </div>
+      <div ref={parentDivRef} className='flex w-full grow flex-col gap-2 px-6 py-2'>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
           .map((task: Task) => (
             <TaskComponent key={task.id} task={task} />
           ))}
+      </div>
+      <div className='mt-4 flex justify-center gap-1 bg-slate-700 p-2'>
+        Made for 🤪 by <a href='https://mfiorek.github.io/'>Macin Fiorek Codes</a>
       </div>
     </>
   );
