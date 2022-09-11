@@ -1,7 +1,7 @@
-import { task } from '@prisma/client';
+import { Task } from '@prisma/client';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Task from '../components/Task';
+import TaskComponent from '../components/Task';
 import TaskInput from '../components/TaskInput';
 import { trpc } from '../utils/trpc';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
@@ -49,8 +49,8 @@ const TaskPage: React.FC = () => {
       <div ref={parentDivRef} className='flex w-full flex-col gap-2 px-6 py-2'>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
-          .map((task: task) => (
-            <Task key={task.id} id={task.id} createdAt={task.createdAt} name={task.name} isDone={task.isDone} />
+          .map((task: Task) => (
+            <TaskComponent key={task.id} task={task} />
           ))}
       </div>
     </>

@@ -1,9 +1,13 @@
 import React from 'react';
-import { task } from '@prisma/client';
+import { Task } from '@prisma/client';
 import { trpc } from '../utils/trpc';
 import classNames from 'classnames';
 
-const Task: React.FC<task> = (task) => {
+interface TaskProperties {
+  task: Task;
+}
+
+const Task: React.FC<TaskProperties> = ({ task }) => {
   const client = trpc.useContext();
   const setIsDone = trpc.useMutation(['task.set-isDone'], {
     onMutate: async ({ id, isDone }) => {

@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
 import { trpc } from '../utils/trpc';
 import cuid from 'cuid';
+import { useSession } from 'next-auth/react';
 
 const TaskInput = () => {
+  const { data: session } = useSession();
   const inputRef = useRef<HTMLInputElement>(null);
   const client = trpc.useContext();
   const createMutation = trpc.useMutation(['task.create'], {
@@ -17,7 +19,7 @@ const TaskInput = () => {
       const previousTasks = client.getQueryData(['task.get-all']);
       // Optimistically update to the new value:
       if (previousTasks) {
-        client.setQueryData(['task.get-all'], [...previousTasks, { id: id, createdAt: createdAt, isDone: false, name: name }]);
+        client.setQueryData(['task.get-all'], [...previousTasks, { id: id, createdAt: createdAt, isDone: false, name: name, userId: session?.user?.id! }]);
       }
       return { previousTasks };
     },
@@ -37,7 +39,7 @@ const TaskInput = () => {
   };
 
   return (
-    <div className='w-full px-6 py-4 sticky top-0 bg-slate-800 z-10'>
+    <div className='sticky top-0 z-10 w-full bg-slate-800 px-6 py-4'>
       <form onSubmit={(e) => handleSubmit(e)} className='relative text-xl'>
         <input
           type='text'
@@ -46,10 +48,7 @@ const TaskInput = () => {
           className='w-full rounded border border-slate-600 bg-transparent py-2 pl-4 pr-20 focus:border-slate-400 focus-visible:outline-none'
         />
         <div className='absolute right-0 top-0 flex h-full justify-end p-1'>
-          <button
-            type='submit'
-            className='flex h-full items-center justify-center rounded-sm bg-slate-600 px-4'
-          >
+          <button type='submit' className='flex h-full items-center justify-center rounded-sm bg-slate-600 px-4'>
             Add
           </button>
         </div>

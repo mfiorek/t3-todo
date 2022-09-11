@@ -14,7 +14,11 @@ const Navbar: React.FC = () => {
       <h1 className='text-center text-2xl font-extrabold text-slate-200'>fior-t3-todo</h1>
       {session?.user && (
         <div className='relative' tabIndex={0} onFocus={() => setMenuOpen(true)} onBlur={() => setMenuOpen(false)}>
-          {session.user.image && <Image src={session.user.image} alt='user pic' width={50} height={50} className='rounded-full' />}
+          {session.user.image && (
+            <div className='relative h-14 w-14'>
+              <Image src={session.user.image} alt='user pic' layout='fill' className='rounded-full' />
+            </div>
+          )}
           <div
             className={`absolute top-full right-0 z-20 mt-1 flex origin-top-right transform flex-col gap-2 rounded bg-slate-600 p-2 transition duration-200 ease-in-out ${menuClass}`}
           >
