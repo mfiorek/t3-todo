@@ -56,7 +56,7 @@ const TaskPage: React.FC = () => {
           ))}
       </div>
       <div className='mt-4 flex justify-center gap-1 bg-slate-700 p-2 text-sm'>
-        Made for 🤪 by <a href='https://mfiorek.github.io/'>Macin Fiorek Codes</a> 🥦 Source code: <a href='https://github.com/mfiorek/t3-todo'>github</a> ⌨
+        Made for 🤪 by <a href='https://mfiorek.github.io/'>Marcin Fiorek Codes</a> 🥦 Source code: <a href='https://github.com/mfiorek/t3-todo'>github</a> ⌨
       </div>
     </>
   );
