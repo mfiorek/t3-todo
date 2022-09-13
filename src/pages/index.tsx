@@ -8,8 +8,7 @@ import { useSession, signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
-import { useEffect, useRef } from 'react';
-import autoAnimate from '@formkit/auto-animate';
+import { AutoAnimate } from '../components/AutoAnimate';
 
 const LoginPage: React.FC = () => {
   const { status } = useSession();
@@ -33,12 +32,7 @@ const LoginPage: React.FC = () => {
 };
 
 const TaskPage: React.FC = () => {
-  const parent = useRef(null);
   const tasks = trpc.useQuery(['task.get-all']);
-
-  useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
 
   if (tasks.isLoading || !tasks.data) {
     return (
@@ -53,13 +47,13 @@ const TaskPage: React.FC = () => {
         <Navbar />
         <TaskInput />
       </div>
-      <ul ref={parent} className='flex w-full grow flex-col items-center gap-2 px-6 py-2'>
+      <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 px-6 py-2'>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
           .map((task: Task) => (
             <TaskComponent key={task.id} task={task} />
           ))}
-      </ul>
+      </AutoAnimate>
       <div className='mt-4 flex flex-wrap justify-center gap-x-2 bg-slate-700 p-2 text-sm'>
         <p className='text-center'>
           Made for 🤪 by <a href='https://mfiorek.github.io/'>Marcin Fiorek Codes</a> 🥦
