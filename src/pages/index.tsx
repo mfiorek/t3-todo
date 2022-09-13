@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
 };
 
 const TaskPage: React.FC = () => {
-  const [parentDivRef] = useAutoAnimate<HTMLDivElement>();
+  const [parentDivRef] = useAutoAnimate<HTMLUListElement>({ disrespectUserMotionPreference: true });
   const tasks = trpc.useQuery(['task.get-all']);
 
   if (tasks.isLoading || !tasks.data) {
@@ -48,13 +48,13 @@ const TaskPage: React.FC = () => {
         <Navbar />
         <TaskInput />
       </div>
-      <div ref={parentDivRef} className='flex w-full grow flex-col items-center gap-2 px-6 py-2'>
+      <ul ref={parentDivRef} className='flex w-full grow flex-col items-center gap-2 px-6 py-2'>
         {tasks.data
           .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
           .map((task: Task) => (
             <TaskComponent key={task.id} task={task} />
           ))}
-      </div>
+      </ul>
       <div className='mt-4 flex justify-center gap-1 bg-slate-700 p-2 text-sm'>
         Made for 🤪 by <a href='https://mfiorek.github.io/'>Marcin Fiorek Codes</a> 🥦 Source code: <a href='https://github.com/mfiorek/t3-todo'>github</a> ⌨
       </div>

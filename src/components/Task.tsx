@@ -54,11 +54,11 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
     },
   });
 
-  const classes = classNames({ 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500': task.isDone });
+  const classes = classNames({ 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500 done': task.isDone, notDone: !task.isDone });
 
   return (
-    <div className='w-full lg:w-[48rem] lg:px-6'>
-      <label htmlFor={task.id} className={`${classes} flex items-start justify-between rounded bg-slate-700`}>
+    <li className={`${classes} w-full lg:w-[48rem] lg:px-6`}>
+      <label htmlFor={task.id} className='flex cursor-pointer items-start justify-between rounded bg-slate-700'>
         <div className='flex items-baseline'>
           <input
             id={task.id}
@@ -75,7 +75,7 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
           <span className='xmark h-3 w-3 bg-red-200'></span>
         </button>
       </label>
-    </div>
+    </li>
   );
 };
 
