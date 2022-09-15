@@ -1,4 +1,4 @@
-import { Task } from '@prisma/client';
+import { Task, TaskList } from '@prisma/client';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import TaskComponent from '../components/Task';
@@ -9,6 +9,10 @@ import Image from 'next/image';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
 import { AutoAnimate } from '../components/AutoAnimate';
+import { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import TaskListInput from '../components/TaskListInput';
+import TaskListComponent from '../components/TaskList';
 
 const LoginPage: React.FC = () => {
   const { status } = useSession();
@@ -16,7 +20,7 @@ const LoginPage: React.FC = () => {
   if (status === 'loading') {
     return (
       <div className='flex h-screen w-full bg-slate-800'>
-        <Loader />
+        <Loader text='Loading auth...' />
       </div>
     );
   }
@@ -32,12 +36,23 @@ const LoginPage: React.FC = () => {
 };
 
 const TaskPage: React.FC = () => {
-  const tasks = trpc.useQuery(['task.get-all']);
+  const client = trpc.useContext();
+  const taskLists = trpc.useQuery(['taskList.get-all']);
+  const [selectedTaskListId, setSelectedTaskListId] = useState<string | null>(null);
+  const tasks = trpc.useQuery(['task.get-by-list', { taskListId: selectedTaskListId }]);
 
-  if (tasks.isLoading || !tasks.data) {
+  useEffect(() => {
+    if (taskLists.data) {
+      taskLists.data.forEach((taskList) => client.prefetchQuery(['task.get-by-list', { taskListId: taskList.id }]));
+    }
+  }, [client, taskLists.data]);
+
+  const sliderClasses = classNames({ 'translate-x-[-50%] lg:translate-x-0 w-[200vw]': !!selectedTaskListId });
+
+  if (taskLists.isLoading || !taskLists.data) {
     return (
       <div className='flex h-screen w-full bg-slate-800'>
-        <Loader />
+        <Loader text='Loading task lists...' />
       </div>
     );
   }
@@ -45,15 +60,47 @@ const TaskPage: React.FC = () => {
     <>
       <div className='sticky top-0 z-50 w-full'>
         <Navbar />
-        <TaskInput />
       </div>
-      <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 px-6 py-2'>
-        {tasks.data
-          .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
-          .map((task: Task) => (
-            <TaskComponent key={task.id} task={task} />
-          ))}
-      </AutoAnimate>
+      <div className='flex w-full grow flex-col overflow-hidden'>
+        <div className={`${sliderClasses} flex justify-center duration-500 lg:w-full`}>
+          <div id='left' className='flex w-full flex-col items-center px-6 lg:w-auto'>
+            <TaskListInput />
+            <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
+              {taskLists.data
+                .sort((taskListA, taskListB) => taskListB.createdAt.getTime() - taskListA.createdAt.getTime())
+                .map((taskList: TaskList) => (
+                  <TaskListComponent key={taskList.id} taskList={taskList} isSelected={taskList.id === selectedTaskListId} setSelectedListId={setSelectedTaskListId} />
+                ))}
+            </AutoAnimate>
+          </div>
+          {selectedTaskListId && (
+            <div id='right' className='flex w-full flex-col items-center px-6 lg:w-auto'>
+              {tasks.isLoading || !tasks.data ? (
+                <div className='flex w-full grow justify-center py-2 lg:w-[28rem]'>
+                  <Loader text='Loading tasks...' />
+                </div>
+              ) : (
+                <>
+                  <div className='mt-4 flex w-full items-center gap-1 rounded bg-slate-700 lg:hidden'>
+                    <button className='m-2 aspect-square rounded bg-slate-400 p-1.5' onClick={() => setSelectedTaskListId(null)}>
+                      <i className='arrow-left block h-5 w-5 bg-slate-700' />
+                    </button>
+                    <p className='py-2 text-xl font-bold'>{taskLists.data.find((tl) => tl.id === selectedTaskListId)?.name}</p>
+                  </div>
+                  <TaskInput taskListId={selectedTaskListId} />
+                  <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
+                    {tasks.data
+                      .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
+                      .map((task: Task) => (
+                        <TaskComponent key={task.id} task={task} />
+                      ))}
+                  </AutoAnimate>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
       <div className='mt-4 flex flex-wrap justify-center gap-x-2 bg-slate-700 p-2 text-sm'>
         <p className='text-center'>
           Made for 🤪 by <a href='https://mfiorek.github.io/'>Marcin Fiorek Codes</a> 🥦

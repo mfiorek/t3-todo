@@ -6,14 +6,16 @@ export const taskRouter = createProtectedRouter()
   .mutation('create', {
     input: z.object({
       id: z.string(),
+      taskListId: z.string(),
       name: z.string(),
       createdAt: z.date(),
     }),
     resolve: async ({ ctx, input }) => {
-      const { id, name, createdAt } = input;
+      const { id, taskListId, name, createdAt } = input;
       return await ctx.prisma.task.create({
         data: {
           id,
+          taskListId,
           name,
           createdAt,
           userId: ctx.session.user.id,
@@ -28,6 +30,19 @@ export const taskRouter = createProtectedRouter()
       return await ctx.prisma.task.findMany({
         where: {
           userId: ctx.session.user.id,
+        },
+      });
+    },
+  })
+  .query('get-by-list', {
+    input: z.object({
+      taskListId: z.string().nullable(),
+    }),
+    resolve: async ({ ctx, input }) => {
+      const { taskListId } = input;
+      return await ctx.prisma.task.findMany({
+        where: {
+          AND: [{ userId: ctx.session.user.id }, { taskListId: taskListId || '' }],
         },
       });
     },

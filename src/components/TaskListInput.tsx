@@ -1,36 +1,32 @@
-import React, { useRef } from 'react';
-import { trpc } from '../utils/trpc';
 import cuid from 'cuid';
 import { useSession } from 'next-auth/react';
+import React, { useRef } from 'react';
+import { trpc } from '../utils/trpc';
 
-interface TaskInputProps {
-  taskListId: string;
-}
-
-const TaskInput: React.FC<TaskInputProps> = ({ taskListId }) => {
+const TaskListInput = () => {
   const { data: session } = useSession();
   const inputRef = useRef<HTMLInputElement>(null);
   const client = trpc.useContext();
-  const createMutation = trpc.useMutation(['task.create'], {
+  const createMutation = trpc.useMutation(['taskList.create'], {
     onMutate: async ({ id, name, createdAt }) => {
       // Clear input text:
       if (inputRef.current) {
         inputRef.current.value = '';
       }
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update):
-      await client.cancelQuery(['task.get-by-list', { taskListId }]);
+      await client.cancelQuery(['taskList.get-all']);
       // Snapshot the previous value:
-      const previousTasks = client.getQueryData(['task.get-by-list', { taskListId }]);
+      const previousTaskLists = client.getQueryData(['taskList.get-all']);
       // Optimistically update to the new value:
-      if (previousTasks) {
-        client.setQueryData(['task.get-by-list', { taskListId }], [...previousTasks, { id, taskListId, createdAt, isDone: false, name, userId: session?.user?.id! }]);
+      if (previousTaskLists) {
+        client.setQueryData(['taskList.get-all'], [...previousTaskLists, { id, createdAt, name, userId: session?.user?.id! }]);
       }
-      return { previousTasks };
+      return { previousTaskLists };
     },
     // If the mutation fails, use the context returned from onMutate to roll back:
     onError: (err, variables, context) => {
-      if (context?.previousTasks) {
-        client.setQueryData(['task.get-by-list', { taskListId }], context.previousTasks);
+      if (context?.previousTaskLists) {
+        client.setQueryData(['taskList.get-all'], context.previousTaskLists);
       }
     },
   });
@@ -38,7 +34,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ taskListId }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputRef.current && inputRef.current.value) {
-      createMutation.mutate({ id: cuid(), taskListId, name: inputRef.current.value, createdAt: new Date() });
+      createMutation.mutate({ id: cuid(), name: inputRef.current.value, createdAt: new Date() });
     }
   };
 
@@ -49,7 +45,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ taskListId }) => {
           <input
             type='text'
             ref={inputRef}
-            placeholder='Add a task'
+            placeholder='Add a task list'
             className='w-full rounded border border-slate-600 bg-transparent py-2 pl-4 pr-20 focus:border-slate-400 focus-visible:outline-none'
           />
           <div className='absolute right-0 top-0 flex h-full justify-end p-1'>
@@ -63,4 +59,4 @@ const TaskInput: React.FC<TaskInputProps> = ({ taskListId }) => {
   );
 };
 
-export default TaskInput;
+export default TaskListInput;

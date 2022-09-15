@@ -12,13 +12,13 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
   const setIsDone = trpc.useMutation(['task.set-isDone'], {
     onMutate: async ({ id, isDone }) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update):
-      await client.cancelQuery(['task.get-all']);
+      await client.cancelQuery(['task.get-by-list', { taskListId: task.taskListId }]);
       // Snapshot the previous value:
-      const previousTasks = client.getQueryData(['task.get-all']);
+      const previousTasks = client.getQueryData(['task.get-by-list', { taskListId: task.taskListId }]);
       // Optimistically update to the new value:
       if (previousTasks) {
         client.setQueryData(
-          ['task.get-all'],
+          ['task.get-by-list', { taskListId: task.taskListId }],
           previousTasks.map((task) => (task.id === id ? { ...task, isDone } : task)),
         );
       }
@@ -27,20 +27,20 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
     // If the mutation fails, use the context returned from onMutate to roll back:
     onError: (err, variables, context) => {
       if (context?.previousTasks) {
-        client.setQueryData(['task.get-all'], context.previousTasks);
+        client.setQueryData(['task.get-by-list', { taskListId: task.taskListId }], context.previousTasks);
       }
     },
   });
   const deleteTask = trpc.useMutation(['task.delete'], {
     onMutate: async ({ id }) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update):
-      await client.cancelQuery(['task.get-all']);
+      await client.cancelQuery(['task.get-by-list']);
       // Snapshot the previous value:
-      const previousTasks = client.getQueryData(['task.get-all']);
+      const previousTasks = client.getQueryData(['task.get-by-list', { taskListId: task.taskListId }]);
       // Optimistically update to the new value:
       if (previousTasks) {
         client.setQueryData(
-          ['task.get-all'],
+          ['task.get-by-list', { taskListId: task.taskListId }],
           previousTasks.filter((task) => task.id !== id),
         );
       }
@@ -49,7 +49,7 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
     // If the mutation fails, use the context returned from onMutate to roll back:
     onError: (err, variables, context) => {
       if (context?.previousTasks) {
-        client.setQueryData(['task.get-all'], context.previousTasks);
+        client.setQueryData(['task.get-by-list', { taskListId: task.taskListId }], context.previousTasks);
       }
     },
   });
@@ -57,7 +57,7 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
   const classes = classNames({ 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500 done': task.isDone, notDone: !task.isDone });
 
   return (
-    <li className={`${classes} w-full lg:w-[48rem] lg:px-6`}>
+    <li className={`${classes} w-full lg:w-[28rem]`}>
       <label htmlFor={task.id} className='flex cursor-pointer items-start justify-between rounded bg-slate-700'>
         <div className='flex items-baseline'>
           <input

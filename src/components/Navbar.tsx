@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
 
   return (
     <div className='w-full bg-slate-700'>
-      <div className='mx-auto flex items-center justify-between px-6 py-2 lg:max-w-3xl'>
+      <div className='mx-auto flex items-center justify-between px-6 py-2 lg:max-w-[62rem]'>
         <div className='flex items-center gap-2'>
           <div className='relative h-8 w-8'>
             <Image src='/logo.svg' alt='logo' layout='fill' />
