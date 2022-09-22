@@ -23,7 +23,7 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
       await client.cancelQuery(['taskList.get-all']);
       // Snapshot the previous value:
       const previousTaskLists = client.getQueryData(['taskList.get-all']);
-      const previousTasks = client.getQueryData(['task.get-by-list', { taskListId: taskList.id }]);
+      const previousTasks = client.getQueryData(['task.get-all']);
       // Optimistically update to the new value:
       if (previousTaskLists) {
         client.setQueryData(
@@ -32,7 +32,10 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
         );
       }
       if (previousTasks) {
-        client.setQueryData(['task.get-by-list', { taskListId: taskList.id }], []);
+        client.setQueryData(
+          ['task.get-all'],
+          previousTasks.filter((task) => task.taskListId !== id),
+        );
       }
       return { previousTaskLists, previousTasks };
     },
@@ -42,7 +45,7 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
         client.setQueryData(['taskList.get-all'], context.previousTaskLists);
       }
       if (context?.previousTasks) {
-        client.setQueryData(['task.get-by-list', { taskListId: taskList.id }], context.previousTasks);
+        client.setQueryData(['task.get-all'], context.previousTasks);
       }
     },
   });

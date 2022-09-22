@@ -9,7 +9,6 @@ import Image from 'next/image';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
 import { AutoAnimate } from '../components/AutoAnimate';
-import { useEffect } from 'react';
 import classNames from 'classnames';
 import TaskListInput from '../components/TaskListInput';
 import TaskListComponent from '../components/TaskList';
@@ -39,17 +38,10 @@ const LoginPage: React.FC = () => {
 };
 
 const TaskPage: React.FC = () => {
-  const client = trpc.useContext();
   const taskLists = trpc.useQuery(['taskList.get-all']);
+  const tasks = trpc.useQuery(['task.get-all']);
   const selectedTaskListId = useAtomValue(selectedTaskListIdAtom);
   const mobileFocusRight = useAtomValue(mobileFocusRightAtom);
-  const tasks = trpc.useQuery(['task.get-by-list', { taskListId: selectedTaskListId }]);
-
-  useEffect(() => {
-    if (taskLists.data) {
-      taskLists.data.forEach((taskList) => client.prefetchQuery(['task.get-by-list', { taskListId: taskList.id }]));
-    }
-  }, [client, taskLists.data]);
 
   const sliderClasses = classNames({ 'translate-x-[-50%] lg:translate-x-0': mobileFocusRight, 'w-[200%]': !!selectedTaskListId });
 
@@ -90,6 +82,7 @@ const TaskPage: React.FC = () => {
                   <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
                     {mobileFocusRight &&
                       tasks.data
+                        .filter((task) => task.taskListId === selectedTaskListId)
                         .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
                         .map((task: Task) => <TaskComponent key={task.id} task={task} />)}
                   </AutoAnimate>

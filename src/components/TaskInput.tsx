@@ -17,19 +17,19 @@ const TaskInput: React.FC = () => {
         inputRef.current.value = '';
       }
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update):
-      await client.cancelQuery(['task.get-by-list', { taskListId }]);
+      await client.cancelQuery(['task.get-all']);
       // Snapshot the previous value:
-      const previousTasks = client.getQueryData(['task.get-by-list', { taskListId }]);
+      const previousTasks = client.getQueryData(['task.get-all']);
       // Optimistically update to the new value:
       if (previousTasks && taskListId) {
-        client.setQueryData(['task.get-by-list', { taskListId }], [...previousTasks, { id, taskListId, createdAt, isDone: false, name, userId: session?.user?.id! }]);
+        client.setQueryData(['task.get-all'], [...previousTasks, { id, taskListId, createdAt, isDone: false, name, userId: session?.user?.id! }]);
       }
       return { previousTasks };
     },
     // If the mutation fails, use the context returned from onMutate to roll back:
     onError: (err, variables, context) => {
       if (context?.previousTasks) {
-        client.setQueryData(['task.get-by-list', { taskListId }], context.previousTasks);
+        client.setQueryData(['task.get-all'], context.previousTasks);
       }
     },
   });
