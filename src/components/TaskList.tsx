@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useAtom, useSetAtom } from 'jotai';
 import { mobileFocusRightAtom, selectedTaskListIdAtom } from '../state/atoms';
 import { trpc } from '../utils/trpc';
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 interface TaskListProperties {
   taskList: TaskList;
@@ -58,9 +58,9 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
     <li className={`${classes} flex w-full justify-between rounded bg-slate-700 lg:w-[28rem]`}>
       <label
         htmlFor={taskList.id}
-        className='cursor-pointer w-full'
+        className='w-full cursor-pointer'
         onClick={() => {
-          router.push(`${router.pathname}#${taskList.name}`)
+          router.push(`${router.pathname}#tasks`);
           setSelectedTaskListId(taskList.id);
           setMobileFocusRight(true);
         }}

@@ -45,10 +45,11 @@ const TaskPage: React.FC = () => {
   const selectedTaskListId = useAtomValue(selectedTaskListIdAtom);
   const [mobileFocusRight, setMobileFocusRight] = useAtom(mobileFocusRightAtom);
 
-  router.events.on('hashChangeComplete', () => {
+  router.beforePopState(() => {
     if ((window && window.location.hash) === '') {
       setMobileFocusRight(false);
     }
+    return true;
   });
 
   const sliderClasses = classNames({ 'translate-x-[-50%] lg:translate-x-0': mobileFocusRight, 'w-[200%]': !!selectedTaskListId });
