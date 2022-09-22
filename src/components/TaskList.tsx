@@ -56,7 +56,7 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
     <li className={`${classes} flex w-full justify-between rounded bg-slate-700 lg:w-[28rem]`}>
       <label
         htmlFor={taskList.id}
-        className='flex grow cursor-pointer items-center justify-between'
+        className='cursor-pointer w-full'
         onClick={() => {
           setSelectedTaskListId(taskList.id);
           setMobileFocusRight(true);

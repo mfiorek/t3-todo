@@ -58,23 +58,25 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
 
   return (
     <li className={`${task.isDone ? 'done' : 'notDone'} w-full lg:w-[28rem]`}>
-      <label htmlFor={task.id} className={`${classes} flex cursor-pointer items-start justify-between rounded bg-slate-700`}>
-        <div className='flex items-baseline'>
-          <input
-            id={task.id}
-            type='checkbox'
-            checked={task.isDone}
-            onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })}
-            className='checked:before:checkmark float-left m-3 grid aspect-square h-4 w-4 cursor-pointer appearance-none place-content-center rounded border border-gray-300 bg-white bg-contain bg-center bg-no-repeat transition duration-200
+      <div className={`${classes} flex w-full rounded bg-slate-700`}>
+        <label htmlFor={task.id} className='flex w-full cursor-pointer items-start'>
+          <div className='flex items-baseline'>
+            <input
+              id={task.id}
+              type='checkbox'
+              checked={task.isDone}
+              onChange={() => setIsDone.mutate({ id: task.id, isDone: !task.isDone })}
+              className='checked:before:checkmark float-left m-3 grid aspect-square h-4 w-4 cursor-pointer appearance-none place-content-center rounded border border-gray-300 bg-white bg-contain bg-center bg-no-repeat transition duration-200
           before:grid before:h-3 before:w-3 before:origin-center before:scale-0 
           checked:border-lime-600 checked:bg-lime-800 checked:before:scale-100 checked:before:bg-lime-600'
-          />
-          {task.name}
-        </div>
+            />
+            {task.name}
+          </div>
+        </label>
         <button className='m-3 flex aspect-square h-4 w-4 items-center justify-center rounded bg-red-500' onClick={() => deleteTask.mutate({ id: task.id })}>
           <span className='xmark h-3 w-3 bg-red-200'></span>
         </button>
-      </label>
+      </div>
     </li>
   );
 };
