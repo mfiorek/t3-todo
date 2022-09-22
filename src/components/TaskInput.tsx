@@ -2,12 +2,11 @@ import React, { useRef } from 'react';
 import { trpc } from '../utils/trpc';
 import cuid from 'cuid';
 import { useSession } from 'next-auth/react';
+import { useAtomValue } from 'jotai';
+import { selectedTaskListIdAtom } from '../state/atoms';
 
-interface TaskInputProps {
-  taskListId: string;
-}
-
-const TaskInput: React.FC<TaskInputProps> = ({ taskListId }) => {
+const TaskInput: React.FC = () => {
+  const taskListId = useAtomValue(selectedTaskListIdAtom);
   const { data: session } = useSession();
   const inputRef = useRef<HTMLInputElement>(null);
   const client = trpc.useContext();
@@ -22,7 +21,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ taskListId }) => {
       // Snapshot the previous value:
       const previousTasks = client.getQueryData(['task.get-by-list', { taskListId }]);
       // Optimistically update to the new value:
-      if (previousTasks) {
+      if (previousTasks && taskListId) {
         client.setQueryData(['task.get-by-list', { taskListId }], [...previousTasks, { id, taskListId, createdAt, isDone: false, name, userId: session?.user?.id! }]);
       }
       return { previousTasks };
@@ -37,7 +36,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ taskListId }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (inputRef.current && inputRef.current.value) {
+    if (inputRef.current && inputRef.current.value && taskListId) {
       createMutation.mutate({ id: cuid(), taskListId, name: inputRef.current.value, createdAt: new Date() });
     }
   };

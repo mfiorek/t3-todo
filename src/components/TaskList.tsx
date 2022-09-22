@@ -1,20 +1,23 @@
+import React from 'react';
 import { TaskList } from '@prisma/client';
 import classNames from 'classnames';
-import React, { Dispatch, SetStateAction } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
+import { mobileFocusRightAtom, selectedTaskListIdAtom } from '../state/atoms';
 import { trpc } from '../utils/trpc';
 
 interface TaskListProperties {
   taskList: TaskList;
-  isSelected: boolean;
-  setSelectedListId: Dispatch<SetStateAction<string | null>>;
 }
 
-const TaskList: React.FC<TaskListProperties> = ({ taskList, isSelected, setSelectedListId }) => {
+const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
   const client = trpc.useContext();
+  const [selectedTaskListId, setSelectedTaskListId] = useAtom(selectedTaskListIdAtom);
+  const setMobileFocusRight = useSetAtom(mobileFocusRightAtom);
+  const isSelected = selectedTaskListId === taskList.id;
   const deleteTaskList = trpc.useMutation(['taskList.delete'], {
     onMutate: async ({ id }) => {
       if (isSelected) {
-        setSelectedListId(null);
+        setSelectedTaskListId(null);
       }
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update):
       await client.cancelQuery(['taskList.get-all']);
@@ -48,7 +51,14 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList, isSelected, setSelec
 
   return (
     <li className={`${classes} flex w-full justify-between rounded bg-slate-700 lg:w-[28rem]`}>
-      <label htmlFor={taskList.id} className='flex grow cursor-pointer items-center justify-between' onClick={() => setSelectedListId(taskList.id)}>
+      <label
+        htmlFor={taskList.id}
+        className='flex grow cursor-pointer items-center justify-between'
+        onClick={() => {
+          setSelectedTaskListId(taskList.id);
+          setMobileFocusRight(true);
+        }}
+      >
         <p className='mx-3 my-2'>{taskList.name}</p>
       </label>
       <button className='m-3 flex aspect-square h-4 w-4 items-center justify-center rounded bg-red-500' onClick={() => deleteTaskList.mutate({ id: taskList.id })}>

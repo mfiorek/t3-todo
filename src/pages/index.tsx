@@ -9,10 +9,13 @@ import Image from 'next/image';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
 import { AutoAnimate } from '../components/AutoAnimate';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import classNames from 'classnames';
 import TaskListInput from '../components/TaskListInput';
 import TaskListComponent from '../components/TaskList';
+import { useAtomValue } from 'jotai';
+import { mobileFocusRightAtom, selectedTaskListIdAtom } from '../state/atoms';
+import TaskListTitle from '../components/TaskListTitle';
 
 const LoginPage: React.FC = () => {
   const { status } = useSession();
@@ -38,7 +41,8 @@ const LoginPage: React.FC = () => {
 const TaskPage: React.FC = () => {
   const client = trpc.useContext();
   const taskLists = trpc.useQuery(['taskList.get-all']);
-  const [selectedTaskListId, setSelectedTaskListId] = useState<string | null>(null);
+  const selectedTaskListId = useAtomValue(selectedTaskListIdAtom);
+  const mobileFocusRight = useAtomValue(mobileFocusRightAtom);
   const tasks = trpc.useQuery(['task.get-by-list', { taskListId: selectedTaskListId }]);
 
   useEffect(() => {
@@ -47,7 +51,7 @@ const TaskPage: React.FC = () => {
     }
   }, [client, taskLists.data]);
 
-  const sliderClasses = classNames({ 'translate-x-[-50%] lg:translate-x-0 w-[200vw]': !!selectedTaskListId });
+  const sliderClasses = classNames({ 'translate-x-[-50%] lg:translate-x-0': mobileFocusRight, 'w-[200%]': !!selectedTaskListId });
 
   if (taskLists.isLoading || !taskLists.data) {
     return (
@@ -69,31 +73,25 @@ const TaskPage: React.FC = () => {
               {taskLists.data
                 .sort((taskListA, taskListB) => taskListB.createdAt.getTime() - taskListA.createdAt.getTime())
                 .map((taskList: TaskList) => (
-                  <TaskListComponent key={taskList.id} taskList={taskList} isSelected={taskList.id === selectedTaskListId} setSelectedListId={setSelectedTaskListId} />
+                  <TaskListComponent key={taskList.id} taskList={taskList} />
                 ))}
             </AutoAnimate>
           </div>
           {selectedTaskListId && (
             <div id='right' className='flex w-full flex-col items-center px-6 lg:w-auto'>
+              <TaskListTitle taskListName={taskLists.data.find((tl) => tl.id === selectedTaskListId)?.name || ''} />
               {tasks.isLoading || !tasks.data ? (
                 <div className='flex w-full grow justify-center py-2 lg:w-[28rem]'>
                   <Loader text='Loading tasks...' />
                 </div>
               ) : (
                 <>
-                  <div className='mt-4 flex w-full items-center gap-1 rounded bg-slate-700 lg:hidden'>
-                    <button className='m-2 aspect-square rounded bg-slate-400 p-1.5' onClick={() => setSelectedTaskListId(null)}>
-                      <i className='arrow-left block h-5 w-5 bg-slate-700' />
-                    </button>
-                    <p className='py-2 text-xl font-bold'>{taskLists.data.find((tl) => tl.id === selectedTaskListId)?.name}</p>
-                  </div>
-                  <TaskInput taskListId={selectedTaskListId} />
+                  <TaskInput />
                   <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
-                    {tasks.data
-                      .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
-                      .map((task: Task) => (
-                        <TaskComponent key={task.id} task={task} />
-                      ))}
+                    {mobileFocusRight &&
+                      tasks.data
+                        .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
+                        .map((task: Task) => <TaskComponent key={task.id} task={task} />)}
                   </AutoAnimate>
                 </>
               )}
