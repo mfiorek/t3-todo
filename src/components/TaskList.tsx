@@ -4,12 +4,14 @@ import classNames from 'classnames';
 import { useAtom, useSetAtom } from 'jotai';
 import { mobileFocusRightAtom, selectedTaskListIdAtom } from '../state/atoms';
 import { trpc } from '../utils/trpc';
+import { useRouter } from "next/router";
 
 interface TaskListProperties {
   taskList: TaskList;
 }
 
 const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
+  const router = useRouter();
   const client = trpc.useContext();
   const [selectedTaskListId, setSelectedTaskListId] = useAtom(selectedTaskListIdAtom);
   const setMobileFocusRight = useSetAtom(mobileFocusRightAtom);
@@ -58,6 +60,7 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
         htmlFor={taskList.id}
         className='cursor-pointer w-full'
         onClick={() => {
+          router.push(`${router.pathname}#${taskList.name}`)
           setSelectedTaskListId(taskList.id);
           setMobileFocusRight(true);
         }}

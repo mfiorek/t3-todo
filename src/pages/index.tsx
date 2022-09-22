@@ -12,9 +12,10 @@ import { AutoAnimate } from '../components/AutoAnimate';
 import classNames from 'classnames';
 import TaskListInput from '../components/TaskListInput';
 import TaskListComponent from '../components/TaskList';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { mobileFocusRightAtom, selectedTaskListIdAtom } from '../state/atoms';
 import TaskListTitle from '../components/TaskListTitle';
+import { useRouter } from 'next/router';
 
 const LoginPage: React.FC = () => {
   const { status } = useSession();
@@ -38,10 +39,17 @@ const LoginPage: React.FC = () => {
 };
 
 const TaskPage: React.FC = () => {
+  const router = useRouter();
   const taskLists = trpc.useQuery(['taskList.get-all']);
   const tasks = trpc.useQuery(['task.get-all']);
   const selectedTaskListId = useAtomValue(selectedTaskListIdAtom);
-  const mobileFocusRight = useAtomValue(mobileFocusRightAtom);
+  const [mobileFocusRight, setMobileFocusRight] = useAtom(mobileFocusRightAtom);
+
+  router.events.on('hashChangeComplete', () => {
+    if ((window && window.location.hash) === '') {
+      setMobileFocusRight(false);
+    }
+  });
 
   const sliderClasses = classNames({ 'translate-x-[-50%] lg:translate-x-0': mobileFocusRight, 'w-[200%]': !!selectedTaskListId });
 
