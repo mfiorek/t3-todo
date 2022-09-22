@@ -20,11 +20,15 @@ const Navbar: React.FC = () => {
         </div>
         {session?.user && (
           <div className='relative' tabIndex={0} onFocus={() => setMenuOpen(true)} onBlur={() => setMenuOpen(false)}>
-            {session.user.image && (
-              <div className='relative h-10 w-10'>
-                <Image src={session.user.image} alt='user pic' layout='fill' className='rounded-full' />
-              </div>
-            )}
+            <div className='relative h-10 w-10 cursor-pointer overflow-hidden rounded-full bg-slate-400 border'>
+              {session.user.image ? (
+                <Image src={session.user.image} alt='user pic' layout='fill' />
+              ) : (
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512' className='pt-2 h-full w-full' stroke='currentColor' fill='#1e293b'>
+                  <path d='M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z' />
+                </svg>
+              )}
+            </div>
             <div
               className={`absolute top-full right-0 z-20 mt-1 flex origin-top-right transform flex-col gap-2 rounded bg-slate-600 p-2 transition duration-200 ease-in-out ${menuClass}`}
             >
