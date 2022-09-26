@@ -1,10 +1,12 @@
 import { Task, TaskList } from '@prisma/client';
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import TaskComponent from '../components/Task';
 import TaskInput from '../components/TaskInput';
 import { trpc } from '../utils/trpc';
 import { useSession, signIn } from 'next-auth/react';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]';
 import Image from 'next/image';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
@@ -45,42 +47,45 @@ const TaskPage: React.FC = () => {
   const selectedTaskListId = useAtomValue(selectedTaskListIdAtom);
   const [mobileFocusRight, setMobileFocusRight] = useAtom(mobileFocusRightAtom);
 
-  router.beforePopState(() => {
-    if ((window && window.location.hash) === '') {
-      setMobileFocusRight(false);
-    }
-    return true;
-  });
+  if (typeof window !== 'undefined') {
+    router.beforePopState(() => {
+      if ((window && window.location.hash) === '') {
+        setMobileFocusRight(false);
+      }
+      return true;
+    });
+  }
 
   const sliderClasses = classNames({ 'translate-x-[-50%] lg:translate-x-0': mobileFocusRight, 'w-[200%]': !!selectedTaskListId });
 
-  if (taskLists.isLoading || !taskLists.data) {
-    return (
-      <div className='flex h-screen w-full bg-slate-800'>
-        <Loader text='Loading task lists...' />
-      </div>
-    );
-  }
   return (
     <>
       <div className='sticky top-0 z-50 w-full'>
         <Navbar />
       </div>
       <div className='flex w-full grow flex-col overflow-hidden'>
-        <div className={`${sliderClasses} flex justify-center duration-500 lg:w-full`}>
+        <div className={`${sliderClasses} flex grow justify-center duration-500 lg:w-full`}>
           <div id='left' className='flex w-full flex-col items-center px-4 lg:w-auto'>
-            <TaskListInput />
-            <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
-              {taskLists.data
-                .sort((taskListA, taskListB) => taskListB.createdAt.getTime() - taskListA.createdAt.getTime())
-                .map((taskList: TaskList) => (
-                  <TaskListComponent key={taskList.id} taskList={taskList} />
-                ))}
-            </AutoAnimate>
+            {taskLists.isLoading || !taskLists.data ? (
+              <div className='flex w-full grow justify-center py-2 lg:w-[28rem]'>
+                <Loader text='Loading task lists...' />
+              </div>
+            ) : (
+              <>
+                <TaskListInput />
+                <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
+                  {taskLists.data
+                    .sort((taskListA, taskListB) => taskListB.createdAt.getTime() - taskListA.createdAt.getTime())
+                    .map((taskList: TaskList) => (
+                      <TaskListComponent key={taskList.id} taskList={taskList} />
+                    ))}
+                </AutoAnimate>
+              </>
+            )}
           </div>
           {selectedTaskListId && (
             <div id='right' className='flex w-full flex-col items-center px-4 lg:w-auto'>
-              <TaskListTitle taskListName={taskLists.data.find((tl) => tl.id === selectedTaskListId)?.name || ''} />
+              <TaskListTitle taskListName={taskLists.data?.find((tl) => tl.id === selectedTaskListId)?.name || ''} />
               {tasks.isLoading || !tasks.data ? (
                 <div className='flex w-full grow justify-center py-2 lg:w-[28rem]'>
                   <Loader text='Loading tasks...' />
@@ -113,13 +118,8 @@ const TaskPage: React.FC = () => {
   );
 };
 
-const HomeContents: React.FC = () => {
-  const { data: session } = useSession();
-
-  return !session ? <LoginPage /> : <TaskPage />;
-};
-
 const Home: NextPage = () => {
+  const { data: session } = useSession();
   return (
     <div className='flex min-h-screen flex-col bg-slate-800'>
       <Head>
@@ -133,9 +133,19 @@ const Home: NextPage = () => {
         <meta name='msapplication-TileColor' content='#1e293b' />
         <meta name='theme-color' content='#1e293b' />
       </Head>
-      <HomeContents />
+      {session ? <TaskPage /> : <LoginPage /> }
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+
+  return {
+    props: {
+      session,
+    },
+  };
 };
 
 export default Home;
