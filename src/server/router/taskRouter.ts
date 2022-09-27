@@ -66,6 +66,23 @@ export const taskRouter = createProtectedRouter()
       });
     },
   })
+  .mutation('set-isStarred', {
+    input: z.object({
+      id: z.string(),
+      isStarred: z.boolean(),
+    }),
+    resolve: async ({ ctx, input }) => {
+      const { id, isStarred } = input;
+      const tastToUpdate = await ctx.prisma.task.findFirstOrThrow({ where: { id } });
+      if (tastToUpdate.userId !== ctx.session.user.id) {
+        return;
+      }
+      return await ctx.prisma.task.update({
+        where: { id },
+        data: { isStarred },
+      });
+    },
+  })
 
   // DELETE
   .mutation('delete', {

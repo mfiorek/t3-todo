@@ -97,7 +97,12 @@ const TaskPage: React.FC = () => {
                     {mobileFocusRight &&
                       tasks.data
                         .filter((task) => task.taskListId === selectedTaskListId)
-                        .sort((taskA, taskB) => Number(taskA.isDone) - Number(taskB.isDone) || taskB.createdAt.getTime() - taskA.createdAt.getTime())
+                        .sort(
+                          (taskA, taskB) =>
+                            Number(taskA.isDone) - Number(taskB.isDone) ||
+                            Number(taskB.isStarred) - Number(taskA.isStarred) ||
+                            taskB.createdAt.getTime() - taskA.createdAt.getTime(),
+                        )
                         .map((task: Task) => <TaskComponent key={task.id} task={task} />)}
                   </AutoAnimate>
                 </>
@@ -133,7 +138,7 @@ const Home: NextPage = () => {
         <meta name='msapplication-TileColor' content='#1e293b' />
         <meta name='theme-color' content='#1e293b' />
       </Head>
-      {session ? <TaskPage /> : <LoginPage /> }
+      {session ? <TaskPage /> : <LoginPage />}
     </div>
   );
 };

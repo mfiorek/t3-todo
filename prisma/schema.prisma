@@ -15,6 +15,7 @@ model Task {
   createdAt  DateTime @default(now())
   name       String
   isDone     Boolean  @default(false)
+  isStarred  Boolean  @default(false)
   userId     String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   taskListId String
