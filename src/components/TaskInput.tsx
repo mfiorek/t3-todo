@@ -22,7 +22,7 @@ const TaskInput: React.FC = () => {
       const previousTasks = client.getQueryData(['task.get-all']);
       // Optimistically update to the new value:
       if (previousTasks && taskListId) {
-        client.setQueryData(['task.get-all'], [...previousTasks, { id, taskListId, createdAt, isDone: false, name, userId: session?.user?.id! }]);
+        client.setQueryData(['task.get-all'], [...previousTasks, { id, taskListId, createdAt, isDone: false, isStarred: false, name, userId: session?.user?.id! }]);
       }
       return { previousTasks };
     },
