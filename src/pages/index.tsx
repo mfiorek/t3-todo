@@ -67,13 +67,13 @@ const TaskPage: React.FC = () => {
         <div className={`${sliderClasses} flex grow justify-center duration-500 lg:w-full`}>
           <div id='left' className='flex w-full flex-col items-center px-4 lg:w-auto'>
             {taskLists.isLoading || !taskLists.data ? (
-              <div className='flex w-full grow justify-center py-2 lg:w-[28rem]'>
+              <div className='flex w-full grow justify-center py-2 lg:w-[30rem]'>
                 <Loader text='Loading task lists...' />
               </div>
             ) : (
               <>
                 <TaskListInput />
-                <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
+                <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[30rem]'>
                   {taskLists.data
                     .sort((taskListA, taskListB) => taskListB.createdAt.getTime() - taskListA.createdAt.getTime())
                     .map((taskList: TaskList) => (
@@ -87,13 +87,13 @@ const TaskPage: React.FC = () => {
             <div id='right' className='flex w-full flex-col items-center px-4 lg:w-auto'>
               <TaskListTitle taskListName={taskLists.data?.find((tl) => tl.id === selectedTaskListId)?.name || ''} />
               {tasks.isLoading || !tasks.data ? (
-                <div className='flex w-full grow justify-center py-2 lg:w-[28rem]'>
+                <div className='flex w-full grow justify-center py-2 lg:w-[30rem]'>
                   <Loader text='Loading tasks...' />
                 </div>
               ) : (
                 <>
                   <TaskInput />
-                  <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[28rem]'>
+                  <AutoAnimate as={'ul'} className='flex w-full grow flex-col items-center gap-2 py-2 lg:w-auto lg:min-w-[30rem]'>
                     {mobileFocusRight &&
                       tasks.data
                         .filter((task) => task.taskListId === selectedTaskListId)

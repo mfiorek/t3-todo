@@ -43,7 +43,7 @@ const TaskInput: React.FC = () => {
 
   return (
     <div className='w-full py-4 lg:w-auto'>
-      <div className='w-full bg-slate-800 lg:w-[28rem]'>
+      <div className='w-full bg-slate-800 lg:w-[30rem]'>
         <form onSubmit={(e) => handleSubmit(e)} className='relative'>
           <input
             type='text'

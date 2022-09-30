@@ -55,7 +55,7 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
   const classes = classNames({ 'lg:opacity-25': !isSelected, 'lg:border': isSelected });
 
   return (
-    <li className={`${classes} flex w-full justify-between rounded bg-slate-700 lg:w-[28rem]`}>
+    <li className={`${classes} flex w-full justify-between rounded bg-slate-700 lg:w-[30rem]`}>
       <label
         htmlFor={taskList.id}
         className='w-full cursor-pointer'

@@ -79,7 +79,7 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
   const classes = classNames({ 'opacity-25 line-through decoration-2 decoration-wavy decoration-red-500': task.isDone });
 
   return (
-    <li className={`${task.isDone ? 'done' : 'notDone'} w-full lg:w-[28rem]`}>
+    <li className={`${task.isDone ? 'done' : 'notDone'} w-full lg:w-[30rem]`}>
       <div className={`${classes} flex w-full rounded bg-slate-700`}>
         <label htmlFor={task.id} className='flex w-full cursor-pointer items-start'>
           <div className='flex items-baseline gap-3 pl-3'>
