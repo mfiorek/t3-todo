@@ -1,8 +1,0 @@
-{
-    "workbench.tree.indent": 20,
-    "workbench.tree.renderIndentGuides": "always",
-    "workbench.colorCustomizations": {
-        "gitDecoration.modifiedResourceForeground": "#00d0ff",
-        "tree.indentGuidesStroke": "#ddd"
-    }
-}
