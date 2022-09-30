@@ -55,7 +55,8 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
   const classes = classNames({ 'lg:opacity-25': !isSelected, 'lg:border': isSelected });
 
   return (
-    <li className={`${classes} flex w-full justify-between rounded bg-slate-700 lg:w-[30rem]`}>
+    <li className='w-full lg:w-[30rem]'>
+      <div className={`${classes} flex w-full rounded bg-slate-700`}>
       <label
         htmlFor={taskList.id}
         className='w-full cursor-pointer'
@@ -70,6 +71,7 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
       <button className='m-3 flex aspect-square h-4 w-4 items-center justify-center rounded bg-red-500' onClick={() => deleteTaskList.mutate({ id: taskList.id })}>
         <span className='xmark h-3 w-3 bg-red-200'></span>
       </button>
+      </div>
     </li>
   );
 };
