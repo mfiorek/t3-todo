@@ -19,11 +19,19 @@ import { mobileFocusRightAtom, selectedTaskListIdAtom } from '../state/atoms';
 import TaskListTitle from '../components/TaskListTitle';
 import { useRouter } from 'next/router';
 import Footer from '../components/Footer';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const LoginPage: React.FC = () => {
   const { status } = useSession();
   const [isDisabled, setIsDisabled] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmitEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (emailInputRef.current && emailInputRef.current.value) {
+      signIn('email', { email: emailInputRef.current.value });
+    }
+  };
 
   if (status === 'loading') {
     return (
@@ -40,28 +48,37 @@ const LoginPage: React.FC = () => {
           <h1 className='text-4xl font-bold'>Login to</h1>
           <h1 className='text-5xl font-extrabold'>fior-t3-todo</h1>
         </section>
-        <section className='flex w-96 flex-col items-center gap-2 rounded-2xl bg-slate-700 p-6 font-medium shadow-2xl'>
+        <section className='flex w-96 flex-col items-center gap-4 rounded-2xl bg-slate-700 p-6 font-medium shadow-2xl'>
           <p className='text-2xl'>
             Passwords are <strong>bad</strong>
           </p>
           <div className='text-center'>
-            <p>People forget passwords.</p>
-            <p>People steal passwords.</p>
-            <p>People lose passwords.</p>
-            <p>People pick bad passwords.</p>
-            <p>People reuse passwords.</p>
+            <p>You don&apos;t want another.</p>
+            <p>Instead, select login method that uses one of your already existing passwords:</p>
           </div>
-          <div className='text-center text-lg'>
-            <p>You don&apos;t want another password.</p>
-            <p>Instead:</p>
-          </div>
+          <form onSubmit={handleSubmitEmail} className='flex w-full flex-col items-center gap-2 bg-slate-700'>
+            <input type='email' ref={emailInputRef} className='w-full rounded-lg p-3' placeholder='your.email@fior-t3-todo.com' />
+            <button
+              type='submit'
+              disabled={isDisabled}
+              className='w-full rounded-lg bg-slate-300 fill-slate-800 py-2 px-4 text-xl font-semibold text-slate-800 shadow-xl transition-colors duration-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-20'
+            >
+              <p>Log in!</p>
+              {isDisabled && (
+                <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 animate-spin' viewBox='0 0 24 24' stroke='currentColor' fill='currentColor'>
+                  <path d='M12 22c5.421 0 10-4.579 10-10h-2c0 4.337-3.663 8-8 8s-8-3.663-8-8c0-4.336 3.663-8 8-8V2C6.579 2 2 6.58 2 12c0 5.421 4.579 10 10 10z' />
+                </svg>
+              )}
+            </button>
+          </form>
+          <p>or</p>
           <button
             onClick={() => {
               setIsDisabled(true);
               signIn('github');
             }}
             disabled={isDisabled}
-            className='mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-300 fill-slate-800 py-2 px-4 text-xl font-semibold text-slate-800 shadow-xl transition-colors duration-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-20'
+            className='flex w-full items-center justify-center gap-2 rounded-lg bg-slate-300 fill-slate-800 py-2 px-4 text-xl font-semibold text-slate-800 shadow-xl transition-colors duration-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-20'
           >
             <p>Log in with GitHub!</p>
             {isDisabled ? (
