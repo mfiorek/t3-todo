@@ -61,9 +61,9 @@ const LoginPage: React.FC = () => {
             <button
               type='submit'
               disabled={isDisabled}
-              className='w-full rounded-lg bg-slate-300 fill-slate-800 py-2 px-4 text-xl font-semibold text-slate-800 shadow-xl transition-colors duration-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-20'
+              className='flex w-full items-center justify-center gap-2 rounded-lg bg-slate-300 fill-slate-800 py-2 px-4 text-xl font-semibold text-slate-800 shadow-xl transition-colors duration-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-20'
             >
-              <p>Log in!</p>
+              <p>Log in with email</p>
               {isDisabled && (
                 <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4 animate-spin' viewBox='0 0 24 24' stroke='currentColor' fill='currentColor'>
                   <path d='M12 22c5.421 0 10-4.579 10-10h-2c0 4.337-3.663 8-8 8s-8-3.663-8-8c0-4.336 3.663-8 8-8V2C6.579 2 2 6.58 2 12c0 5.421 4.579 10 10 10z' />
@@ -80,7 +80,7 @@ const LoginPage: React.FC = () => {
             disabled={isDisabled}
             className='flex w-full items-center justify-center gap-2 rounded-lg bg-slate-300 fill-slate-800 py-2 px-4 text-xl font-semibold text-slate-800 shadow-xl transition-colors duration-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-20'
           >
-            <p>Log in with GitHub!</p>
+            <p>Log in with GitHub</p>
             {isDisabled ? (
               <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6 animate-spin' viewBox='0 0 24 24' stroke='currentColor' fill='currentColor'>
                 <path d='M12 22c5.421 0 10-4.579 10-10h-2c0 4.337-3.663 8-8 8s-8-3.663-8-8c0-4.336 3.663-8 8-8V2C6.579 2 2 6.58 2 12c0 5.421 4.579 10 10 10z' />
