@@ -16,7 +16,7 @@ const TaskListTitle: React.FC<TaskListTitleProps> = ({ taskListName }) => {
       <button className='my-2 ml-2 aspect-square rounded bg-slate-400 p-1.5' onClick={() => router.back()}>
         <i className='arrow-left block h-5 w-5 bg-slate-700' />
       </button>
-      <p className='mr-10 grow p-2 text-center text-xl font-bold'>{taskListName}</p>
+      <p className='grow p-2 text-center text-xl font-bold'>{taskListName}</p>
       <button className='my-2 mr-2 aspect-square rounded bg-slate-400 p-1.5' onClick={() => client.invalidateQueries('task.get-all')}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -24,7 +24,7 @@ const TaskListTitle: React.FC<TaskListTitleProps> = ({ taskListName }) => {
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className={`h-6 w-6 text-slate-700 ${isFetching && 'animate-spin'}`}
+          className={`h-5 w-5 text-slate-700 ${isFetching && 'animate-spin'}`}
         >
           <path
             strokeLinecap='round'
