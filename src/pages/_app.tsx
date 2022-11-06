@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import { useEffect } from 'react';
 import { withTRPC } from '@trpc/next';
 import type { AppRouter } from '../server/router';
 import superjson from 'superjson';
@@ -8,6 +9,20 @@ import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 
 const MyApp: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
+  useEffect(() => {
+    const setTheme = () => {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+    // call setTheme once when app loads:
+    setTheme();
+    window.addEventListener('storage', setTheme);
+    return () => window.removeEventListener('storage', setTheme);
+  }, []);
+
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />
