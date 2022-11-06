@@ -12,19 +12,19 @@ const TaskListTitle: React.FC<TaskListTitleProps> = ({ taskListName }) => {
   const { isFetching } = trpc.useQuery(['task.get-all']);
 
   return (
-    <div className='mt-4 flex w-full items-center gap-1 rounded bg-slate-700 lg:hidden'>
-      <button className='my-2 ml-2 aspect-square rounded bg-slate-400 p-1.5' onClick={() => router.back()}>
-        <i className='arrow-left block h-5 w-5 bg-slate-700' />
+    <div className='mt-4 flex w-full items-center gap-1 rounded bg-slate-300 dark:bg-slate-700 lg:hidden'>
+      <button className='my-2 ml-2 aspect-square rounded bg-slate-600 p-1.5 dark:bg-slate-400' onClick={() => router.back()}>
+        <i className='arrow-left block h-5 w-5 bg-slate-300 dark:bg-slate-700' />
       </button>
       <p className='grow p-2 text-center text-xl font-bold'>{taskListName}</p>
-      <button className='my-2 mr-2 aspect-square rounded bg-slate-400 p-1.5' onClick={() => client.invalidateQueries('task.get-all')}>
+      <button className='my-2 mr-2 aspect-square rounded bg-slate-600 p-1.5 dark:bg-slate-400' onClick={() => client.invalidateQueries('task.get-all')}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className={`h-5 w-5 text-slate-700 ${isFetching && 'animate-spin'}`}
+          className={`h-5 w-5 text-slate-300 dark:text-slate-700 ${isFetching && 'animate-spin'}`}
         >
           <path
             strokeLinecap='round'

@@ -80,7 +80,7 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
 
   return (
     <li className={`${task.isDone ? 'done' : 'notDone'} w-full lg:w-[30rem]`}>
-      <div className={`${classes} flex w-full rounded bg-slate-700`}>
+      <div className={`${classes} flex w-full rounded bg-slate-300 dark:bg-slate-700`}>
         <label htmlFor={task.id} className='flex w-full cursor-pointer items-start'>
           <div className='flex items-baseline gap-3 pl-3'>
             <input
@@ -97,8 +97,8 @@ const Task: React.FC<TaskProperties> = ({ task }) => {
               checked={task.isStarred}
               onChange={() => setIsStarred.mutate({ id: task.id, isStarred: !task.isStarred })}
               className='after:star checked:after:star float-left mr-1 grid aspect-square h-4 w-4 cursor-pointer appearance-none
-                after:absolute after:h-5 after:w-5 after:origin-center after:bg-slate-600
-                checked:after:h-5 checked:after:w-5 checked:after:bg-amber-300'
+                after:absolute after:h-5 after:w-5 after:origin-center after:bg-slate-400 checked:after:h-5
+                checked:after:w-5 checked:after:bg-amber-500 dark:after:bg-slate-600 dark:checked:after:bg-amber-300'
             />
             <p className='my-2'>{task.name}</p>
           </div>

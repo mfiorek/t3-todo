@@ -56,21 +56,21 @@ const TaskList: React.FC<TaskListProperties> = ({ taskList }) => {
 
   return (
     <li className='w-full lg:w-[30rem]'>
-      <div className={`${classes} flex w-full rounded bg-slate-700`}>
-      <label
-        htmlFor={taskList.id}
-        className='w-full cursor-pointer'
-        onClick={() => {
-          router.push(`${router.pathname}#tasks`);
-          setSelectedTaskListId(taskList.id);
-          setMobileFocusRight(true);
-        }}
-      >
-        <p className='mx-3 my-2'>{taskList.name}</p>
-      </label>
-      <button className='m-3 flex aspect-square h-4 w-4 items-center justify-center rounded bg-red-500' onClick={() => deleteTaskList.mutate({ id: taskList.id })}>
-        <span className='xmark h-3 w-3 bg-red-200'></span>
-      </button>
+      <div className={`${classes} flex w-full rounded border-slate-800 bg-slate-300 dark:border-slate-200 dark:bg-slate-700`}>
+        <label
+          htmlFor={taskList.id}
+          className='w-full cursor-pointer'
+          onClick={() => {
+            router.push(`${router.pathname}#tasks`);
+            setSelectedTaskListId(taskList.id);
+            setMobileFocusRight(true);
+          }}
+        >
+          <p className='mx-3 my-2'>{taskList.name}</p>
+        </label>
+        <button className='m-3 flex aspect-square h-4 w-4 items-center justify-center rounded bg-red-500' onClick={() => deleteTaskList.mutate({ id: taskList.id })}>
+          <span className='xmark h-3 w-3 bg-red-200'></span>
+        </button>
       </div>
     </li>
   );

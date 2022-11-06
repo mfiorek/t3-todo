@@ -12,19 +12,19 @@ const Navbar: React.FC = () => {
   const menuClass = classNames({ 'scale-0 opacity-0': !menuOpen, 'scale-100 opacity-100': menuOpen });
 
   return (
-    <div className='w-full bg-slate-700'>
+    <div className='w-full bg-slate-300 dark:bg-slate-700'>
       <div className='mx-auto flex items-center justify-between px-4 py-2 lg:max-w-[64rem]'>
         <div className='flex items-center gap-2'>
           <div className='relative h-8 w-8'>
             <Image src='/logo.svg' alt='logo' layout='fill' />
           </div>
-          <h1 className='text-center text-xl font-extrabold text-slate-200'>fior-t3-todo</h1>
+          <h1 className='text-center text-xl font-extrabold text-slate-800 dark:text-slate-200'>fior-t3-todo</h1>
         </div>
         <div className='flex items-center gap-4'>
           <ThemeToggle />
           {session?.user && (
             <div className='relative' tabIndex={0} onFocus={() => setMenuOpen(true)} onBlur={() => setMenuOpen(false)}>
-              <div className='relative h-10 w-10 cursor-pointer overflow-hidden rounded-full border bg-slate-400'>
+              <div className='relative h-10 w-10 cursor-pointer overflow-hidden rounded-full border border-slate-800 bg-slate-600 dark:border-slate-200 dark:bg-slate-400'>
                 {session.user.image ? (
                   <Image src={session.user.image} alt='user pic' layout='fill' />
                 ) : (
@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
                 )}
               </div>
               <div
-                className={`absolute top-full right-0 z-20 mt-1 flex origin-top-right transform flex-col gap-2 rounded bg-slate-600 p-2 transition duration-200 ease-in-out ${menuClass}`}
+                className={`absolute top-full right-0 z-20 mt-1 flex origin-top-right transform flex-col gap-2 rounded bg-slate-400 p-2 transition duration-200 ease-in-out dark:bg-slate-600 ${menuClass}`}
               >
                 <div>
                   <h3>{session.user.name}</h3>

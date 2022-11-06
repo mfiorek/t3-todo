@@ -40,16 +40,16 @@ const TaskListInput = () => {
 
   return (
     <div className='w-full py-4 lg:w-auto'>
-      <div className='w-full bg-slate-800 lg:w-[30rem]'>
+      <div className='w-full bg-slate-200 dark:bg-slate-800 lg:w-[30rem]'>
         <form onSubmit={(e) => handleSubmit(e)} className='relative'>
           <input
             type='text'
             ref={inputRef}
             placeholder='Add a task list'
-            className='w-full rounded border border-slate-600 bg-transparent py-2 pl-4 pr-20 focus:border-slate-400 focus-visible:outline-none'
+            className='w-full rounded border border-slate-400 bg-transparent py-2 pl-4 pr-20 focus:border-slate-600 focus-visible:outline-none dark:border-slate-600 dark:focus:border-slate-400'
           />
           <div className='absolute right-0 top-0 flex h-full justify-end p-1'>
-            <button type='submit' className='flex h-full items-center justify-center rounded-sm bg-slate-600 px-4'>
+            <button type='submit' className='flex h-full items-center justify-center rounded-sm bg-slate-400 px-4 dark:bg-slate-600'>
               Add
             </button>
           </div>

@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
 const Footer = () => {
   return (
-    <div className='mt-4 flex flex-wrap justify-center gap-x-2 bg-slate-700 p-2 text-sm'>
+    <div className='mt-4 flex flex-wrap justify-center gap-x-2 bg-slate-300 p-2 text-sm dark:bg-slate-700'>
       <p className='text-center'>
         Made for 🤪 by <a href='https://mfiorek.github.io/'>Marcin Fiorek Codes</a> 🥦
       </p>
@@ -10,7 +10,7 @@ const Footer = () => {
         Source code: <a href='https://github.com/mfiorek/t3-todo'>github</a> ⌨
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
